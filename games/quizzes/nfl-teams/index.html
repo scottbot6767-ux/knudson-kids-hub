@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which NFL Team Are You? - Knudson Kids Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #013369 0%, #006400 100%);
+            overflow-x: hidden;
+        }
+
+        .field-lines {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 50px,
+                white 50px,
+                white 52px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px; left: 20px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            color: #013369;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { transform: scale(1.05); }
+
+        .header { text-align: center; margin-bottom: 30px; }
+
+        .logo {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #013369, #D50A0A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p { margin-top: 8px; color: #666; font-weight: 600; }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            width: 100%; height: 12px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #013369, #D50A0A);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            color: #013369;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .answers { display: flex; flex-direction: column; gap: 12px; }
+
+        .answer-btn {
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 3px solid #eee;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .answer-btn:hover {
+            border-color: #013369;
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(1, 51, 105, 0.2);
+        }
+
+        .answer-btn .emoji { margin-right: 12px; font-size: 1.3rem; }
+
+        .result-card { display: none; text-align: center; }
+        .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: touchdown 0.5s ease infinite alternate;
+        }
+
+        @keyframes touchdown {
+            from { transform: translateY(0) scale(1); }
+            to { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .result-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            color: #013369;
+            margin-bottom: 15px;
+        }
+
+        .team-card {
+            padding: 25px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .team-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .team-card p { line-height: 1.6; }
+
+        .team-facts {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .team-facts h4 {
+            font-family: 'Fredoka', sans-serif;
+            color: #013369;
+            margin-bottom: 10px;
+        }
+
+        .team-facts ul { list-style: none; padding: 0; }
+        .team-facts li { padding: 5px 0; color: #555; }
+        .team-facts li::before { content: "🏈 "; }
+
+        .play-again-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #013369, #D50A0A);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn:hover { transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 1.4rem; }
+            .question { font-size: 1.2rem; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="field-lines"></div>
+
+    <a href="../../../" class="back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Back to Hub</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>🏈 Which NFL Team Are You?</h1>
+                <p>Find your perfect team match!</p>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <div class="question-number" id="questionNum">Question 1 of 5</div>
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <div class="team-card" id="teamCard">
+                <h3 id="teamName"></h3>
+                <p id="teamDesc"></p>
+            </div>
+            <div class="team-facts">
+                <h4>Team Facts:</h4>
+                <ul id="teamFacts"></ul>
+            </div>
+            <button class="play-again-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What kind of weather do you like?",
+                answers: [
+                    { text: "Rain and clouds - keeps things exciting!", emoji: "🌧️", type: "seahawks" },
+                    { text: "Cold and snowy - I'm tough!", emoji: "❄️", type: "packers" },
+                    { text: "Sunny and warm!", emoji: "☀️", type: "chiefs" },
+                    { text: "Any weather - I'm ready for anything!", emoji: "🌤️", type: "cowboys" },
+                    { text: "Cool mountain air!", emoji: "🏔️", type: "broncos" }
+                ]
+            },
+            {
+                question: "What's your playing style?",
+                answers: [
+                    { text: "Fast and exciting - big plays!", emoji: "⚡", type: "chiefs" },
+                    { text: "Tough defense - nobody gets past me!", emoji: "🛡️", type: "seahawks" },
+                    { text: "Classic and traditional!", emoji: "🏆", type: "packers" },
+                    { text: "Star power - go big or go home!", emoji: "⭐", type: "cowboys" },
+                    { text: "High-powered offense!", emoji: "🚀", type: "broncos" }
+                ]
+            },
+            {
+                question: "Pick an animal!",
+                answers: [
+                    { text: "Hawk - fast and fierce!", emoji: "🦅", type: "seahawks" },
+                    { text: "Horse - powerful and free!", emoji: "🐴", type: "broncos" },
+                    { text: "Wolf - pack mentality!", emoji: "🐺", type: "packers" },
+                    { text: "Lion - king of the field!", emoji: "🦁", type: "cowboys" },
+                    { text: "Cheetah - super speed!", emoji: "🐆", type: "chiefs" }
+                ]
+            },
+            {
+                question: "What do you want to be known for?",
+                answers: [
+                    { text: "Being the LOUDEST fans!", emoji: "📢", type: "seahawks" },
+                    { text: "Winning championships!", emoji: "🏆", type: "chiefs" },
+                    { text: "Historic tradition!", emoji: "📜", type: "packers" },
+                    { text: "Being America's Team!", emoji: "🇺🇸", type: "cowboys" },
+                    { text: "Mile high energy!", emoji: "🎉", type: "broncos" }
+                ]
+            },
+            {
+                question: "Pick a team color combo!",
+                answers: [
+                    { text: "Blue and Green!", emoji: "💙💚", type: "seahawks" },
+                    { text: "Red and Gold!", emoji: "❤️💛", type: "chiefs" },
+                    { text: "Green and Gold!", emoji: "💚💛", type: "packers" },
+                    { text: "Blue and Silver!", emoji: "💙🤍", type: "cowboys" },
+                    { text: "Orange and Blue!", emoji: "🧡💙", type: "broncos" }
+                ]
+            }
+        ];
+
+        const results = {
+            seahawks: {
+                emoji: "🦅",
+                title: "You're the SEATTLE SEAHAWKS!",
+                name: "Seattle Seahawks",
+                desc: "The 12th Man is behind you! You've got the loudest fans in football and a fierce Legion of Boom spirit!",
+                facts: [
+                    "The '12th Man' fans are so loud they've caused earthquakes!",
+                    "Won Super Bowl XLVIII in dominant fashion",
+                    "Home stadium is CenturyLink Field in Seattle",
+                    "Team colors are College Navy, Action Green, and Wolf Grey"
+                ],
+                colors: "linear-gradient(135deg, #002244, #69BE28)"
+            },
+            chiefs: {
+                emoji: "🏹",
+                title: "You're the KANSAS CITY CHIEFS!",
+                name: "Kansas City Chiefs",
+                desc: "You've got Patrick Mahomes energy! Fast, exciting, and always ready to make the big play!",
+                facts: [
+                    "Won back-to-back Super Bowls recently!",
+                    "Patrick Mahomes is one of the best QBs ever",
+                    "Famous for their amazing BBQ in Kansas City",
+                    "Arrowhead Stadium is super loud!"
+                ],
+                colors: "linear-gradient(135deg, #E31837, #FFB81C)"
+            },
+            packers: {
+                emoji: "🧀",
+                title: "You're the GREEN BAY PACKERS!",
+                name: "Green Bay Packers",
+                desc: "The only fan-owned team in the NFL! You've got more history and tradition than anyone!",
+                facts: [
+                    "Won the first two Super Bowls ever!",
+                    "Fans are called 'Cheeseheads'",
+                    "The only publicly-owned team in NFL",
+                    "Lambeau Field is called 'The Frozen Tundra'"
+                ],
+                colors: "linear-gradient(135deg, #203731, #FFB612)"
+            },
+            cowboys: {
+                emoji: "⭐",
+                title: "You're the DALLAS COWBOYS!",
+                name: "Dallas Cowboys",
+                desc: "America's Team! You're all about star power, big moments, and being in the spotlight!",
+                facts: [
+                    "Called 'America's Team' since 1978",
+                    "Have won 5 Super Bowls",
+                    "AT&T Stadium has the world's largest video screen",
+                    "The star logo is recognized worldwide"
+                ],
+                colors: "linear-gradient(135deg, #003594, #869397)"
+            },
+            broncos: {
+                emoji: "🐴",
+                title: "You're the DENVER BRONCOS!",
+                name: "Denver Broncos",
+                desc: "Mile High Magic! You play at the highest altitude in the NFL and bring the energy!",
+                facts: [
+                    "Won 3 Super Bowls",
+                    "Play at Mile High (5,280 feet elevation!)",
+                    "Orange Crush defense was legendary",
+                    "John Elway is a team legend"
+                ],
+                colors: "linear-gradient(135deg, #FB4F14, #002244)"
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = { seahawks: 0, chiefs: 0, packers: 0, cowboys: 0, broncos: 0 };
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = q.answers.map(a => `
+                <button class="answer-btn" onclick="selectAnswer('${a.type}')">
+                    <span class="emoji">${a.emoji}</span>${a.text}
+                </button>
+            `).join('');
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('progress').style.width = '100%';
+
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[maxType];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('teamName').textContent = result.name;
+            document.getElementById('teamDesc').textContent = result.desc;
+            document.getElementById('teamCard').style.background = result.colors;
+            document.getElementById('teamFacts').innerHTML = result.facts.map(f => `<li>${f}</li>`).join('');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = { seahawks: 0, chiefs: 0, packers: 0, cowboys: 0, broncos: 0 };
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            showQuestion();
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

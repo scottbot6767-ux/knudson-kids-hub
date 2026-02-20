@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Minecraft Mob Are You? - Knudson Kids Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --mc-green: #5D8C3E;
+            --mc-brown: #8B6914;
+            --mc-blue: #3C8DAD;
+            --mc-gray: #7F7F7F;
+            --mc-dark: #1D1D21;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 40%, var(--mc-green) 40%, var(--mc-green) 100%);
+            overflow-x: hidden;
+            image-rendering: pixelated;
+        }
+
+        /* Pixelated clouds */
+        .clouds {
+            position: fixed;
+            top: 5%;
+            left: 0;
+            width: 200%;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Crect fill='white' x='10' y='20' width='60' height='20'/%3E%3Crect fill='white' x='20' y='10' width='40' height='10'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            animation: moveClouds 60s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes moveClouds {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px; left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--mc-gray);
+            border: 4px solid var(--mc-dark);
+            color: white;
+            text-decoration: none;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            box-shadow: 4px 4px 0 var(--mc-dark);
+            transition: all 0.1s ease;
+        }
+
+        .back-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--mc-dark);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; }
+
+        .logo {
+            display: inline-block;
+            background: var(--mc-brown);
+            border: 6px solid var(--mc-dark);
+            padding: 25px 40px;
+            box-shadow: 8px 8px 0 var(--mc-dark);
+        }
+
+        .logo h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: white;
+            text-shadow: 3px 3px 0 var(--mc-dark);
+            line-height: 1.6;
+        }
+
+        .logo p { 
+            margin-top: 12px; 
+            color: #ddd; 
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .quiz-card {
+            background: #C6C6C6;
+            border: 6px solid var(--mc-dark);
+            padding: 30px 25px;
+            box-shadow: 8px 8px 0 var(--mc-dark);
+        }
+
+        .progress-bar {
+            width: 100%; height: 20px;
+            background: var(--mc-dark);
+            border: 3px solid #555;
+            margin-bottom: 25px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(180deg, #5C5 0%, #3A3 100%);
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: var(--mc-dark);
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            color: var(--mc-dark);
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .answers { display: flex; flex-direction: column; gap: 10px; }
+
+        .answer-btn {
+            padding: 15px 20px;
+            background: linear-gradient(180deg, #AAA 0%, #888 100%);
+            border: 4px solid var(--mc-dark);
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--mc-dark);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-align: left;
+            box-shadow: 3px 3px 0 var(--mc-dark);
+        }
+
+        .answer-btn:hover {
+            background: linear-gradient(180deg, #5C5 0%, #3A3 100%);
+            color: white;
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--mc-dark);
+        }
+
+        .answer-btn .emoji { margin-right: 12px; font-size: 1.3rem; }
+
+        .result-card { display: none; text-align: center; }
+        .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 0.5s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .result-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: var(--mc-dark);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .mob-card {
+            background: var(--mc-green);
+            border: 4px solid var(--mc-dark);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mob-card h3 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .mob-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .result-desc {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .play-again-btn {
+            padding: 15px 30px;
+            background: linear-gradient(180deg, #5C5 0%, #3A3 100%);
+            border: 4px solid var(--mc-dark);
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--mc-dark);
+            transition: all 0.1s ease;
+        }
+
+        .play-again-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--mc-dark);
+        }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 0.7rem; }
+            .question { font-size: 0.75rem; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="clouds"></div>
+
+    <a href="../../../" class="back-btn">
+        <span>← BACK</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>WHICH MINECRAFT MOB ARE YOU?</h1>
+                <p>Take the quiz to find out!</p>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <div class="question-number" id="questionNum">QUESTION 1/5</div>
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <div class="mob-card">
+                <h3 id="mobName"></h3>
+                <p id="mobDesc"></p>
+            </div>
+            <p class="result-desc" id="resultDesc"></p>
+            <button class="play-again-btn" onclick="restartQuiz()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "IT'S NIGHTTIME IN MINECRAFT. WHAT DO YOU DO?",
+                answers: [
+                    { text: "Explore in the dark - I'm not scared!", emoji: "🌙", type: "enderman" },
+                    { text: "Hide in my house until morning!", emoji: "🏠", type: "pig" },
+                    { text: "Go find some players to surprise!", emoji: "💥", type: "creeper" },
+                    { text: "Protect my friends from monsters!", emoji: "🛡️", type: "wolf" },
+                    { text: "Fly around and check things out!", emoji: "🦇", type: "bee" }
+                ]
+            },
+            {
+                question: "WHAT'S YOUR FAVORITE THING TO DO?",
+                answers: [
+                    { text: "Collect cool blocks and items!", emoji: "📦", type: "enderman" },
+                    { text: "Eat yummy food and relax!", emoji: "🍎", type: "pig" },
+                    { text: "Sneak up on people - BOO!", emoji: "👻", type: "creeper" },
+                    { text: "Hang out with my best friends!", emoji: "👯", type: "wolf" },
+                    { text: "Make things and stay busy!", emoji: "🌸", type: "bee" }
+                ]
+            },
+            {
+                question: "PICK A MINECRAFT BIOME!",
+                answers: [
+                    { text: "The End - mysterious and cool!", emoji: "🌌", type: "enderman" },
+                    { text: "Plains - peaceful and grassy!", emoji: "🌾", type: "pig" },
+                    { text: "Forest - perfect for hiding!", emoji: "🌲", type: "creeper" },
+                    { text: "Taiga - snowy and adventurous!", emoji: "❄️", type: "wolf" },
+                    { text: "Flower forest - so pretty!", emoji: "🌻", type: "bee" }
+                ]
+            },
+            {
+                question: "HOW DO YOU ACT AROUND NEW PEOPLE?",
+                answers: [
+                    { text: "I'm tall and mysterious!", emoji: "🕴️", type: "enderman" },
+                    { text: "I'm friendly and chill!", emoji: "😊", type: "pig" },
+                    { text: "I get really close really fast!", emoji: "😬", type: "creeper" },
+                    { text: "Loyal once we're friends!", emoji: "🤝", type: "wolf" },
+                    { text: "I buzz around happily!", emoji: "✨", type: "bee" }
+                ]
+            },
+            {
+                question: "WHAT'S YOUR SUPERPOWER?",
+                answers: [
+                    { text: "Teleporting anywhere!", emoji: "⚡", type: "enderman" },
+                    { text: "Making everyone happy!", emoji: "💖", type: "pig" },
+                    { text: "Making a BIG impression!", emoji: "💣", type: "creeper" },
+                    { text: "Being super loyal!", emoji: "❤️", type: "wolf" },
+                    { text: "Making sweet things!", emoji: "🍯", type: "bee" }
+                ]
+            }
+        ];
+
+        const results = {
+            enderman: {
+                emoji: "🟪",
+                title: "YOU'RE AN ENDERMAN!",
+                name: "ENDERMAN",
+                mobDesc: "Tall, mysterious, and loves collecting blocks! You can teleport and don't like when people stare at you.",
+                desc: "You're unique and do your own thing. You love collecting cool stuff and have special abilities others don't!"
+            },
+            pig: {
+                emoji: "🐷",
+                title: "YOU'RE A PIG!",
+                name: "PIG",
+                mobDesc: "Friendly, peaceful, and loves to eat! You hang out in grassy areas and make cute oinking sounds.",
+                desc: "You're super chill and friendly! Everyone likes having you around because you're so easy-going and fun!"
+            },
+            creeper: {
+                emoji: "💚",
+                title: "YOU'RE A CREEPER!",
+                name: "CREEPER",
+                mobDesc: "Sneaky, explosive, and iconic! You're the most famous mob in all of Minecraft!",
+                desc: "You make a BIG impact wherever you go! You're memorable and everyone knows who you are. Sssssss..."
+            },
+            wolf: {
+                emoji: "🐺",
+                title: "YOU'RE A WOLF!",
+                name: "WOLF",
+                mobDesc: "Loyal, brave, and protective! Once someone is your friend, you'll stick with them forever!",
+                desc: "You're the ultimate best friend! Loyal, brave, and always there when your friends need you!"
+            },
+            bee: {
+                emoji: "🐝",
+                title: "YOU'RE A BEE!",
+                name: "BEE",
+                mobDesc: "Busy, helpful, and loves flowers! You make honey and help gardens grow!",
+                desc: "You're always busy doing something helpful! You spread joy and make sweet things happen wherever you go!"
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = { enderman: 0, pig: 0, creeper: 0, wolf: 0, bee: 0 };
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = `QUESTION ${currentQuestion + 1}/${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = q.answers.map(a => `
+                <button class="answer-btn" onclick="selectAnswer('${a.type}')">
+                    <span class="emoji">${a.emoji}</span>${a.text}
+                </button>
+            `).join('');
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('progress').style.width = '100%';
+
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[maxType];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('mobName').textContent = result.name;
+            document.getElementById('mobDesc').textContent = result.mobDesc;
+            document.getElementById('resultDesc').textContent = result.desc;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = { enderman: 0, pig: 0, creeper: 0, wolf: 0, bee: 0 };
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            showQuestion();
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

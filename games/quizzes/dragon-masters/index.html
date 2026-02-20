@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Dragon Master Dragon Are You? - Knudson Kids Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #1a0a2e 0%, #4a1c6b 30%, #6b2d5c 60%, #c84b31 100%);
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 60%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        .star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 15%; left: 50%; animation-delay: 0.3s; }
+        .star:nth-child(3) { top: 8%; left: 80%; animation-delay: 0.6s; }
+        .star:nth-child(4) { top: 25%; left: 30%; animation-delay: 0.9s; }
+        .star:nth-child(5) { top: 20%; left: 70%; animation-delay: 1.2s; }
+        .star:nth-child(6) { top: 5%; left: 40%; animation-delay: 1.5s; }
+        .star:nth-child(7) { top: 30%; left: 15%; animation-delay: 1.8s; }
+        .star:nth-child(8) { top: 12%; left: 90%; animation-delay: 2.1s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .flames {
+            position: fixed;
+            bottom: 0; left: 0;
+            width: 100%; height: 100px;
+            background: linear-gradient(0deg, #ff4500 0%, #ff6b35 30%, transparent 100%);
+            opacity: 0.3;
+            animation: flicker 0.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            from { opacity: 0.2; }
+            to { opacity: 0.4; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px; left: 20px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            color: #4a1c6b;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { transform: scale(1.05); }
+
+        .header { text-align: center; margin-bottom: 30px; }
+
+        .logo {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, #c84b31, #4a1c6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p { margin-top: 8px; color: #666; font-weight: 600; }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%; height: 12px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c84b31, #4a1c6b);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            color: #4a1c6b;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .answers { display: flex; flex-direction: column; gap: 12px; }
+
+        .answer-btn {
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 3px solid #eee;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .answer-btn:hover {
+            border-color: #c84b31;
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(200, 75, 49, 0.2);
+        }
+
+        .answer-btn .emoji { margin-right: 12px; font-size: 1.3rem; }
+
+        .result-card { display: none; text-align: center; }
+        .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: dragonFly 2s ease-in-out infinite;
+        }
+
+        @keyframes dragonFly {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .result-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            color: #4a1c6b;
+            margin-bottom: 15px;
+        }
+
+        .dragon-card {
+            padding: 25px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .dragon-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .dragon-card .master {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .dragon-card p { line-height: 1.6; }
+
+        .dragon-powers {
+            background: #f5f0fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .dragon-powers h4 {
+            font-family: 'Fredoka', sans-serif;
+            color: #4a1c6b;
+            margin-bottom: 10px;
+        }
+
+        .dragon-powers ul { list-style: none; padding: 0; }
+        .dragon-powers li { padding: 5px 0; color: #555; }
+        .dragon-powers li::before { content: "🔥 "; }
+
+        .play-again-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #c84b31, #4a1c6b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn:hover { transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 1.3rem; }
+            .question { font-size: 1.2rem; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+    <div class="flames"></div>
+
+    <a href="../../../" class="back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Back to Hub</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>🐉 Which Dragon Masters Dragon Are You?</h1>
+                <p>Discover your dragon connection!</p>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <div class="question-number" id="questionNum">Question 1 of 5</div>
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <div class="dragon-card" id="dragonCard">
+                <h3 id="dragonName"></h3>
+                <p class="master" id="dragonMaster"></p>
+                <p id="dragonDesc"></p>
+            </div>
+            <div class="dragon-powers">
+                <h4>Dragon Powers:</h4>
+                <ul id="dragonPowers"></ul>
+            </div>
+            <button class="play-again-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What element calls to you?",
+                answers: [
+                    { text: "Fire - warm and powerful!", emoji: "🔥", type: "vulcan" },
+                    { text: "Earth - strong and steady!", emoji: "🌍", type: "worm" },
+                    { text: "Water - flowing and cool!", emoji: "💧", type: "shu" },
+                    { text: "Sun - bright and shining!", emoji: "☀️", type: "kepri" },
+                    { text: "Wind - free and fast!", emoji: "💨", type: "wati" }
+                ]
+            },
+            {
+                question: "How do you help your friends?",
+                answers: [
+                    { text: "I protect them fiercely!", emoji: "🛡️", type: "vulcan" },
+                    { text: "I use my strength!", emoji: "💪", type: "worm" },
+                    { text: "I heal them when they're hurt!", emoji: "💚", type: "shu" },
+                    { text: "I light the way!", emoji: "✨", type: "kepri" },
+                    { text: "I use my speed and smarts!", emoji: "🧠", type: "wati" }
+                ]
+            },
+            {
+                question: "Pick a place to live!",
+                answers: [
+                    { text: "Inside a volcano - nice and toasty!", emoji: "🌋", type: "vulcan" },
+                    { text: "Underground caves!", emoji: "🕳️", type: "worm" },
+                    { text: "By the ocean or river!", emoji: "🌊", type: "shu" },
+                    { text: "In the sunny desert!", emoji: "🏜️", type: "kepri" },
+                    { text: "High in the mountains!", emoji: "⛰️", type: "wati" }
+                ]
+            },
+            {
+                question: "What's your best quality?",
+                answers: [
+                    { text: "I'm brave and fierce!", emoji: "🦁", type: "vulcan" },
+                    { text: "I'm loyal and dependable!", emoji: "🤝", type: "worm" },
+                    { text: "I'm kind and caring!", emoji: "💕", type: "shu" },
+                    { text: "I'm wise and ancient!", emoji: "🦉", type: "kepri" },
+                    { text: "I'm clever and quick!", emoji: "⚡", type: "wati" }
+                ]
+            },
+            {
+                question: "Pick a color for your dragon scales!",
+                answers: [
+                    { text: "Red - like flames!", emoji: "❤️", type: "vulcan" },
+                    { text: "Brown - like the earth!", emoji: "🤎", type: "worm" },
+                    { text: "Blue - like the ocean!", emoji: "💙", type: "shu" },
+                    { text: "Gold - like the sun!", emoji: "💛", type: "kepri" },
+                    { text: "Green - like the forest!", emoji: "💚", type: "wati" }
+                ]
+            }
+        ];
+
+        const results = {
+            vulcan: {
+                emoji: "🔥",
+                title: "You're VULCAN the Fire Dragon!",
+                name: "Vulcan",
+                master: "Drake's Dragon",
+                desc: "You're a powerful red Fire Dragon! You breathe fire and protect your friends with fierce loyalty. Drake chose you from the Dragon Stone!",
+                powers: [
+                    "Breathes powerful fire blasts",
+                    "Scales are hot to the touch",
+                    "Very protective of Dragon Masters",
+                    "Strong connection with Drake"
+                ],
+                colors: "linear-gradient(135deg, #c84b31, #8B0000)"
+            },
+            worm: {
+                emoji: "🪨",
+                title: "You're WORM the Earth Dragon!",
+                name: "Worm",
+                master: "Rori's Dragon",
+                desc: "You're a sturdy brown Earth Dragon! You can dig through the ground and are incredibly strong. Rori is lucky to have you!",
+                powers: [
+                    "Can dig through solid rock",
+                    "Super strong and tough",
+                    "Can cause earthquakes",
+                    "Loyal and dependable friend"
+                ],
+                colors: "linear-gradient(135deg, #8B6914, #5D4037)"
+            },
+            shu: {
+                emoji: "💧",
+                title: "You're SHU the Water Dragon!",
+                name: "Shu",
+                master: "Bo's Dragon",
+                desc: "You're a beautiful blue Water Dragon! You can swim super fast and your tears have healing powers. Bo treasures you!",
+                powers: [
+                    "Breathes powerful water jets",
+                    "Swims faster than any fish",
+                    "Healing tears can cure sickness",
+                    "Gentle and caring nature"
+                ],
+                colors: "linear-gradient(135deg, #1E90FF, #006994)"
+            },
+            kepri: {
+                emoji: "☀️",
+                title: "You're KEPRI the Sun Dragon!",
+                name: "Kepri",
+                master: "Ana's Dragon",
+                desc: "You're a magnificent golden Sun Dragon! You can shoot sunbeams and light up the darkest places. Ana is your perfect match!",
+                powers: [
+                    "Shoots beams of sunlight",
+                    "Glows in the dark",
+                    "Ancient and wise",
+                    "Connected to the power of the sun"
+                ],
+                colors: "linear-gradient(135deg, #FFD700, #FF8C00)"
+            },
+            wati: {
+                emoji: "🌿",
+                title: "You're WATI the Wind Dragon!",
+                name: "Wati",
+                master: "Petra's Dragon",
+                desc: "You're a swift green Wind Dragon! You can create powerful gusts and fly faster than anyone. Petra and you make a great team!",
+                powers: [
+                    "Creates powerful wind gusts",
+                    "Fastest flyer of all dragons",
+                    "Can become invisible in the forest",
+                    "Clever and quick-thinking"
+                ],
+                colors: "linear-gradient(135deg, #228B22, #006400)"
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = { vulcan: 0, worm: 0, shu: 0, kepri: 0, wati: 0 };
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = q.answers.map(a => `
+                <button class="answer-btn" onclick="selectAnswer('${a.type}')">
+                    <span class="emoji">${a.emoji}</span>${a.text}
+                </button>
+            `).join('');
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('progress').style.width = '100%';
+
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[maxType];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('dragonName').textContent = result.name;
+            document.getElementById('dragonMaster').textContent = `${result.master}`;
+            document.getElementById('dragonDesc').textContent = result.desc;
+            document.getElementById('dragonCard').style.background = result.colors;
+            document.getElementById('dragonPowers').innerHTML = result.powers.map(p => `<li>${p}</li>`).join('');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = { vulcan: 0, worm: 0, shu: 0, kepri: 0, wati: 0 };
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            showQuestion();
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

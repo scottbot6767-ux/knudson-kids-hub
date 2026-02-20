@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Bird of Prey Are You? - Knudson Kids Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 30%, #F5DEB3 70%, #8B7355 100%);
+            overflow-x: hidden;
+        }
+
+        .mountains {
+            position: fixed;
+            bottom: 0; left: 0;
+            width: 100%; height: 40%;
+            background: linear-gradient(135deg, #5D4E37 0%, #8B7355 50%, #6B5344 100%);
+            clip-path: polygon(0% 100%, 15% 40%, 30% 70%, 45% 30%, 60% 60%, 75% 20%, 90% 50%, 100% 35%, 100% 100%);
+            z-index: 0;
+        }
+
+        .birds {
+            position: fixed;
+            top: 10%; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bird {
+            position: absolute;
+            font-size: 2rem;
+            animation: soar 20s infinite linear;
+            opacity: 0.6;
+        }
+
+        .bird:nth-child(1) { top: 15%; animation-delay: 0s; }
+        .bird:nth-child(2) { top: 25%; animation-delay: -5s; }
+        .bird:nth-child(3) { top: 10%; animation-delay: -10s; }
+
+        @keyframes soar {
+            0% { left: -10%; transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+            100% { left: 110%; transform: rotate(5deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px; left: 20px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            color: #5D4E37;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { transform: scale(1.05); }
+
+        .header { text-align: center; margin-bottom: 30px; }
+
+        .logo {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #5D4E37, #8B7355);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p { margin-top: 8px; color: #666; font-weight: 600; }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .progress-bar {
+            width: 100%; height: 12px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5D4E37, #8B7355);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            color: #8B7355;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .answers { display: flex; flex-direction: column; gap: 12px; }
+
+        .answer-btn {
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 3px solid #eee;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .answer-btn:hover {
+            border-color: #8B7355;
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(139, 115, 85, 0.2);
+        }
+
+        .answer-btn .emoji { margin-right: 12px; font-size: 1.3rem; }
+
+        .result-card { display: none; text-align: center; }
+        .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-emoji {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: glide 2s ease-in-out infinite;
+        }
+
+        @keyframes glide {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .result-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            color: #5D4E37;
+            margin-bottom: 15px;
+        }
+
+        .bird-card {
+            background: linear-gradient(135deg, #5D4E37, #8B7355);
+            padding: 25px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .bird-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .bird-card p { line-height: 1.6; }
+
+        .bird-facts {
+            background: #f8f4ef;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .bird-facts h4 {
+            font-family: 'Fredoka', sans-serif;
+            color: #5D4E37;
+            margin-bottom: 10px;
+        }
+
+        .bird-facts ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bird-facts li {
+            padding: 5px 0;
+            color: #555;
+        }
+
+        .bird-facts li::before {
+            content: "🪶 ";
+        }
+
+        .play-again-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #5D4E37, #8B7355);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn:hover { transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 1.4rem; }
+            .question { font-size: 1.2rem; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="mountains"></div>
+    <div class="birds">
+        <div class="bird">🦅</div>
+        <div class="bird">🦅</div>
+        <div class="bird">🦅</div>
+    </div>
+
+    <a href="../../../" class="back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Back to Hub</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>🦅 Which Bird of Prey Are You?</h1>
+                <p>Discover your inner raptor!</p>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <div class="question-number" id="questionNum">Question 1 of 5</div>
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <div class="bird-card">
+                <h3 id="birdName"></h3>
+                <p id="birdDesc"></p>
+            </div>
+            <div class="bird-facts">
+                <h4>Cool Facts:</h4>
+                <ul id="birdFacts"></ul>
+            </div>
+            <button class="play-again-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "How do you like to move?",
+                answers: [
+                    { text: "Super fast - I'm the speedster!", emoji: "💨", type: "peregrine" },
+                    { text: "Strong and powerful!", emoji: "💪", type: "eagle" },
+                    { text: "Silent and sneaky!", emoji: "🤫", type: "owl" },
+                    { text: "Quick and agile!", emoji: "⚡", type: "hawk" },
+                    { text: "Graceful and soaring!", emoji: "🌊", type: "osprey" }
+                ]
+            },
+            {
+                question: "What's your favorite time of day?",
+                answers: [
+                    { text: "Morning - early bird gets the worm!", emoji: "🌅", type: "eagle" },
+                    { text: "Midday - when it's bright and clear!", emoji: "☀️", type: "hawk" },
+                    { text: "Night time - I love the dark!", emoji: "🌙", type: "owl" },
+                    { text: "Any time I can go FAST!", emoji: "⏰", type: "peregrine" },
+                    { text: "Near sunset by the water!", emoji: "🌊", type: "osprey" }
+                ]
+            },
+            {
+                question: "Pick your favorite food!",
+                answers: [
+                    { text: "Fish - fresh from the water!", emoji: "🐟", type: "osprey" },
+                    { text: "Whatever I can catch - I'm not picky!", emoji: "🍖", type: "hawk" },
+                    { text: "Mice and small critters!", emoji: "🐭", type: "owl" },
+                    { text: "Birds - gotta go fast to catch them!", emoji: "🐦", type: "peregrine" },
+                    { text: "Big meals - I'm a big bird!", emoji: "🦴", type: "eagle" }
+                ]
+            },
+            {
+                question: "Where would you build your home?",
+                answers: [
+                    { text: "High on a cliff!", emoji: "🏔️", type: "peregrine" },
+                    { text: "A giant nest in a tall tree!", emoji: "🌲", type: "eagle" },
+                    { text: "A cozy tree hole!", emoji: "🕳️", type: "owl" },
+                    { text: "In the forest!", emoji: "🌳", type: "hawk" },
+                    { text: "Near a lake or ocean!", emoji: "🏖️", type: "osprey" }
+                ]
+            },
+            {
+                question: "What's your best skill?",
+                answers: [
+                    { text: "I'm the FASTEST in the world!", emoji: "🏎️", type: "peregrine" },
+                    { text: "I'm super strong and powerful!", emoji: "🦾", type: "eagle" },
+                    { text: "I can see in the dark!", emoji: "👀", type: "owl" },
+                    { text: "I'm quick and can turn fast!", emoji: "🔄", type: "hawk" },
+                    { text: "I can dive into water and catch fish!", emoji: "🎯", type: "osprey" }
+                ]
+            }
+        ];
+
+        const results = {
+            peregrine: {
+                emoji: "🦅",
+                title: "You're a PEREGRINE FALCON!",
+                name: "Peregrine Falcon",
+                desc: "The fastest animal on Earth! When you dive, you can go over 240 miles per hour! You're sleek, speedy, and totally awesome!",
+                facts: [
+                    "Can dive at over 240 mph - faster than a race car!",
+                    "Found on every continent except Antarctica",
+                    "Has special nostrils to breathe while diving fast",
+                    "Name means 'wanderer' because they travel far"
+                ]
+            },
+            eagle: {
+                emoji: "🦅",
+                title: "You're a BALD EAGLE!",
+                name: "Bald Eagle",
+                desc: "The symbol of America! You're powerful, majestic, and a natural leader. Your wingspan can be over 7 feet wide!",
+                facts: [
+                    "Not actually bald - has white feathers on head!",
+                    "Can see fish from a mile away",
+                    "Builds the biggest nests of any bird - up to 10 feet wide!",
+                    "Mates for life with the same partner"
+                ]
+            },
+            owl: {
+                emoji: "🦉",
+                title: "You're a GREAT HORNED OWL!",
+                name: "Great Horned Owl",
+                desc: "The silent hunter of the night! You're wise, mysterious, and can see in almost total darkness. Your hearing is incredible!",
+                facts: [
+                    "Can turn head almost all the way around - 270 degrees!",
+                    "Flies completely silent - special feathers muffle sound",
+                    "Has ears at different heights to pinpoint sounds",
+                    "Called 'tiger of the sky' because it's so fierce"
+                ]
+            },
+            hawk: {
+                emoji: "🦅",
+                title: "You're a RED-TAILED HAWK!",
+                name: "Red-Tailed Hawk",
+                desc: "The most common hawk in North America! You're adaptable, smart, and an expert hunter. You can spot a mouse from 100 feet up!",
+                facts: [
+                    "Has eyesight 8 times better than humans!",
+                    "The 'screech' in movies is usually a red-tailed hawk",
+                    "Can live in cities, deserts, forests - anywhere!",
+                    "Soars on warm air currents to save energy"
+                ]
+            },
+            osprey: {
+                emoji: "🦅",
+                title: "You're an OSPREY!",
+                name: "Osprey (Fish Hawk)",
+                desc: "The fishing expert! You can dive into water feet-first and catch fish with your special grippy talons. You're unique and amazing!",
+                facts: [
+                    "Only raptor that dives into water for fish!",
+                    "Has special oily feathers that don't get waterlogged",
+                    "Outer toe can turn backward for better fish grip",
+                    "Catches fish on 70% of dives - super successful!"
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = { peregrine: 0, eagle: 0, owl: 0, hawk: 0, osprey: 0 };
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = q.answers.map(a => `
+                <button class="answer-btn" onclick="selectAnswer('${a.type}')">
+                    <span class="emoji">${a.emoji}</span>${a.text}
+                </button>
+            `).join('');
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('progress').style.width = '100%';
+
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[maxType];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('birdName').textContent = result.name;
+            document.getElementById('birdDesc').textContent = result.desc;
+            document.getElementById('birdFacts').innerHTML = result.facts.map(f => `<li>${f}</li>`).join('');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = { peregrine: 0, eagle: 0, owl: 0, hawk: 0, osprey: 0 };
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            showQuestion();
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

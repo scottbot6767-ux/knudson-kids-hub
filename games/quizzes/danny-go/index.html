@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Danny Go Video Are You? - Knudson Kids Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --danny-orange: #FF6B35;
+            --danny-yellow: #FFD23F;
+            --danny-blue: #3BCEAC;
+            --danny-purple: #9B5DE5;
+            --danny-pink: #F15BB5;
+            --danny-green: #00F5D4;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--danny-orange) 0%, var(--danny-yellow) 25%, var(--danny-green) 50%, var(--danny-blue) 75%, var(--danny-purple) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating shapes */
+        .shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) { width: 100px; height: 100px; background: var(--danny-pink); top: 10%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 150px; height: 150px; background: var(--danny-yellow); top: 60%; left: 80%; animation-delay: -2s; }
+        .shape:nth-child(3) { width: 80px; height: 80px; background: var(--danny-blue); top: 30%; left: 70%; animation-delay: -4s; }
+        .shape:nth-child(4) { width: 120px; height: 120px; background: var(--danny-green); top: 80%; left: 20%; animation-delay: -6s; }
+        .shape:nth-child(5) { width: 60px; height: 60px; background: var(--danny-purple); top: 50%; left: 50%; animation-delay: -8s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(180deg) scale(1.1); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            color: var(--danny-orange);
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 50px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .logo h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--danny-orange), var(--danny-pink), var(--danny-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            margin-top: 8px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Quiz Card */
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danny-orange), var(--danny-pink));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            color: var(--danny-purple);
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .answer-btn {
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 3px solid #eee;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn:hover {
+            border-color: var(--danny-orange);
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .answer-btn:active {
+            transform: translateX(5px) scale(0.98);
+        }
+
+        .answer-btn .emoji {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        /* Result */
+        .result-card {
+            display: none;
+            text-align: center;
+        }
+
+        .result-card.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .result-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            color: var(--danny-orange);
+            margin-bottom: 15px;
+        }
+
+        .result-desc {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .watch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #FF0000, #CC0000);
+            color: white;
+            text-decoration: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .watch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 0, 0, 0.4);
+        }
+
+        .play-again-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--danny-purple), var(--danny-pink));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .other-videos {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px dashed #eee;
+        }
+
+        .other-videos h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .video-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .video-chip {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .video-chip:hover {
+            background: var(--danny-yellow);
+            color: #333;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 1.5rem; }
+            .question { font-size: 1.3rem; }
+            .back-btn { padding: 10px 15px; font-size: 0.9rem; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <a href="../../../" class="back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Back to Hub</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>Which Danny Go Video Are You?</h1>
+                <p>Answer the questions to find your perfect video!</p>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <div class="question-number" id="questionNum">Question 1 of 5</div>
+            <div class="question" id="question"></div>
+            <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <p class="result-desc" id="resultDesc"></p>
+            <div class="video-container" id="videoContainer"></div>
+            <a href="#" class="watch-btn" id="watchBtn" target="_blank">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                </svg>
+                Watch on YouTube
+            </a>
+            <br><br>
+            <button class="play-again-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+            
+            <div class="other-videos">
+                <h3>More Danny Go Videos:</h3>
+                <div class="video-chips" id="otherVideos"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "How are you feeling RIGHT NOW?",
+                answers: [
+                    { text: "SUPER HYPER! I need to MOVE!", emoji: "🤪", type: "energy" },
+                    { text: "Silly and giggly!", emoji: "😜", type: "silly" },
+                    { text: "Ready for an adventure!", emoji: "🦸", type: "adventure" },
+                    { text: "I want to dance!", emoji: "💃", type: "dance" }
+                ]
+            },
+            {
+                question: "Pick your favorite thing to do!",
+                answers: [
+                    { text: "Run around like crazy!", emoji: "🏃", type: "energy" },
+                    { text: "Make funny faces and be goofy!", emoji: "🤡", type: "silly" },
+                    { text: "Pretend I'm a superhero!", emoji: "⚡", type: "adventure" },
+                    { text: "Groove to music!", emoji: "🎵", type: "dance" }
+                ]
+            },
+            {
+                question: "What sounds like the most fun?",
+                answers: [
+                    { text: "FREEZE! Don't move!", emoji: "🥶", type: "freeze" },
+                    { text: "Wiggle everything!", emoji: "🐛", type: "silly" },
+                    { text: "Jump over hot lava!", emoji: "🌋", type: "adventure" },
+                    { text: "Copy the dance moves!", emoji: "🕺", type: "dance" }
+                ]
+            },
+            {
+                question: "Pick an animal!",
+                answers: [
+                    { text: "Cheetah - so FAST!", emoji: "🐆", type: "energy" },
+                    { text: "Monkey - silly and fun!", emoji: "🐒", type: "silly" },
+                    { text: "T-Rex - ROAR!", emoji: "🦖", type: "adventure" },
+                    { text: "Flamingo - look at me dance!", emoji: "🦩", type: "dance" }
+                ]
+            },
+            {
+                question: "What's your superpower?",
+                answers: [
+                    { text: "Super speed!", emoji: "💨", type: "energy" },
+                    { text: "Making everyone laugh!", emoji: "😂", type: "silly" },
+                    { text: "Being SUPER strong!", emoji: "💪", type: "adventure" },
+                    { text: "Dancing so good!", emoji: "✨", type: "dance" }
+                ]
+            }
+        ];
+
+        const results = {
+            energy: {
+                emoji: "⚡",
+                title: "You're a FREEZE DANCE Champion!",
+                desc: "You've got TONS of energy! You love running, jumping, and moving fast! This video is perfect for you - dance when the music plays, FREEZE when it stops!",
+                videoId: "2UcZWXvgMZE",
+                videoTitle: "Freeze Dance"
+            },
+            silly: {
+                emoji: "🤪",
+                title: "You're a WIGGLE STAR!",
+                desc: "You're super silly and love to be goofy! This video will have you wiggling, jiggling, and giggling all around the room!",
+                videoId: "akTfnLNJjWs",
+                videoTitle: "Wiggle Wiggle"
+            },
+            adventure: {
+                emoji: "🦸",
+                title: "You're a FLOOR IS LAVA Hero!",
+                desc: "You love adventure and excitement! Jump on the furniture, avoid the lava, and be the hero of your living room!",
+                videoId: "sp5xSBJ4yFE",
+                videoTitle: "Floor is Lava"
+            },
+            dance: {
+                emoji: "💃",
+                title: "You're a DANCE MACHINE!",
+                desc: "You were born to dance! Follow along with the moves and show off your awesome dance skills!",
+                videoId: "sN5xN0UQXJU",
+                videoTitle: "Move Your Body"
+            },
+            freeze: {
+                emoji: "🥶",
+                title: "You're a FREEZE MASTER!",
+                desc: "You've got incredible self-control! Dance and groove, then FREEZE like a statue when the music stops!",
+                videoId: "2UcZWXvgMZE",
+                videoTitle: "Freeze Dance"
+            }
+        };
+
+        const allVideos = [
+            { title: "Freeze Dance", id: "2UcZWXvgMZE" },
+            { title: "Floor is Lava", id: "sp5xSBJ4yFE" },
+            { title: "Wiggle Wiggle", id: "akTfnLNJjWs" },
+            { title: "Move Your Body", id: "sN5xN0UQXJU" },
+            { title: "Dinosaur Stomp", id: "Imhi98dHa5w" },
+            { title: "Run Around", id: "p8B-lOGO74s" },
+            { title: "Jump Jump", id: "xSHvPeBVjvM" }
+        ];
+
+        let currentQuestion = 0;
+        let scores = { energy: 0, silly: 0, adventure: 0, dance: 0, freeze: 0 };
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = q.answers.map((a, i) => `
+                <button class="answer-btn" onclick="selectAnswer('${a.type}')">
+                    <span class="emoji">${a.emoji}</span>${a.text}
+                </button>
+            `).join('');
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('progress').style.width = '100%';
+
+            // Find highest score
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = results[maxType];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultDesc').textContent = result.desc;
+            document.getElementById('videoContainer').innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${result.videoId}?autoplay=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            `;
+            document.getElementById('watchBtn').href = `https://www.youtube.com/watch?v=${result.videoId}`;
+
+            // Show other videos
+            const otherVideos = allVideos.filter(v => v.id !== result.videoId);
+            document.getElementById('otherVideos').innerHTML = otherVideos.map(v => 
+                `<a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="video-chip">${v.title}</a>`
+            ).join('');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = { energy: 0, silly: 0, adventure: 0, dance: 0, freeze: 0 };
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            showQuestion();
+        }
+
+        // Start quiz
+        showQuestion();
+    </script>
+</body>
+</html>
